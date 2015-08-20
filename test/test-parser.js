@@ -1,5 +1,6 @@
 var Parser = require('../lib/parser'),
     parseListEntry = Parser.parseListEntry;
+    parseMlsdListEntry = Parser.parseMlsdListEntry;
 
 var path = require('path'),
     assert = require('assert'),
@@ -139,3 +140,24 @@ var group = path.basename(__filename, '.js') + '/';
             + 'Expected: ' + inspect(v.expected);
   assert.deepEqual(result, v.expected, msg);
 });
+
+
+
+
+[
+  { source: 'type=file;size=200520591;modify=20150820064043;UNIX.mode=0644;unique=17g38812b; file.gz',
+    expected: {
+      type: 'file',
+      name: 'file.gz',
+      size: 200520591,
+      date: new Date('2015-08-20T06:40:43')
+    },
+    what: 'Normal file'
+  }
+].forEach(function(v) {
+    var result = parseMlsdListEntry(v.source),
+      msg = '[' + group + v.what + ']: parsed output mismatch.\n'
+        + 'Saw: ' + inspect(result) + '\n'
+        + 'Expected: ' + inspect(v.expected);
+    assert.deepEqual(result, v.expected, msg);
+  });
